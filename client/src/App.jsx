@@ -9,21 +9,19 @@ function App() {
       .catch((error) => console.log(error.message));
   }, []);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const formData = new FormData();
-    axios
-      .post(
-        "http://localhost:3000/products",
-        JSON.stringify(Object.fromEntries(formData)),
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
+    const formData = new FormData(e.target);
+
+    await axios
+      .post("http://localhost:3000/products", {
+        ...Object.fromEntries(formData),
+        image: formData.get("image").name,
+      })
       .then((res) => console.log(res))
       .catch((error) => console.log(error.message));
+
+    e.target.reset();
   }
 
   return (
@@ -40,7 +38,7 @@ function App() {
             </div>
           ))}
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleSubmit(e)}>
         <div>
           <label htmlFor="name">Name</label>
           <input type="text" name="name" id="name" />
