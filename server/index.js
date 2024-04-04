@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const Product = require("./models/productModel");
 const cors = require("cors");
+const uuid = require("uuid");
 
 const app = express();
 app.use(express.json());
@@ -38,6 +39,7 @@ app.get("/products/:id", async (req, res) => {
 
 app.post("/products", async (req, res) => {
   try {
+    req.body.id = uuid.v4();
     const products = await Product.create(req.body);
     res.status(200).json(products);
   } catch (error) {
