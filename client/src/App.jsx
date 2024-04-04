@@ -22,7 +22,7 @@ function App() {
         ...Object.fromEntries(formData),
         image: e.target[3].value,
       })
-      // .then((res) => console.log(res))
+      .then((res) => console.log(res))
       .catch((error) => console.log(error.message));
 
     e.target.reset();
