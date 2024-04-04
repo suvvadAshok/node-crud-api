@@ -1,7 +1,10 @@
 import axios from "axios";
 import React from "react";
+import { formFields } from "./assets/mockdata/addProductsFormFields";
+
 function App() {
   const [data, setData] = React.useState([]);
+
   React.useEffect(() => {
     axios
       .get("http://localhost:3000/products")
@@ -16,7 +19,7 @@ function App() {
     await axios
       .post("http://localhost:3000/products", {
         ...Object.fromEntries(formData),
-        image: formData.get("image").name,
+        image: e.target[3].value,
       })
       .then((res) => console.log(res))
       .catch((error) => console.log(error.message));
@@ -25,39 +28,38 @@ function App() {
   }
 
   return (
-    <>
-      <h1>hii</h1>
-      <div>
+    <div className="flex gap-2 justify-center items-center">
+      <div className="grid grid-cols-4 gap-2 ">
         {data &&
           data.map((d, i) => (
             <div key={i}>
-              <img src={d.image} alt={d.name} />
+              <img src={d.image} alt={d.name} className="h-40 w-60" />
               <h3>Name:{d.name}</h3>
               <p>Quantity:{d.quantity}</p>
               <p>Price:{d.price}</p>
             </div>
           ))}
       </div>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <div>
-          <label htmlFor="name">Name</label>
-          <input type="text" name="name" id="name" />
-        </div>
-        <div>
-          <label htmlFor="quantity">Quantity</label>
-          <input type="number" name="quantity" id="quantity" />
-        </div>
-        <div>
-          <label htmlFor="price">Price</label>
-          <input type="number" name="price" id="price" />
-        </div>
-        <div>
-          <label htmlFor="image">Upload</label>
-          <input type="file" name="image" id="image" />
-        </div>
+      <form
+        onSubmit={(e) => handleSubmit(e)}
+        className="bg-slate-50 border-1 p-2 flex flex-col gap-1"
+      >
+        {formFields.map((formField, index) => (
+          <div key={index} className="flex">
+            <label htmlFor={formField.value} className="basis-1/4">
+              {formField.label}
+            </label>
+            <input
+              type={formField.type}
+              name={formField.value}
+              id={formField.value}
+              className="basis-3/4"
+            />
+          </div>
+        ))}
         <button type="submit">submit</button>
       </form>
-    </>
+    </div>
   );
 }
 
