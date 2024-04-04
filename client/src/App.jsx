@@ -14,6 +14,7 @@ function App() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+
     const formData = new FormData(e.target);
 
     await axios
@@ -21,18 +22,36 @@ function App() {
         ...Object.fromEntries(formData),
         image: e.target[3].value,
       })
-      .then((res) => console.log(res))
+      // .then((res) => console.log(res))
       .catch((error) => console.log(error.message));
 
     e.target.reset();
+  }
+
+  function showOneDataCard(id) {
+    console.log("hellooo...", id);
+    const product = data.filter((d) => d.id === id);
+    console.log(product);
+    return (
+      <>
+        {product.map((i) => (
+          <div key={i.id} className="bg-red-300 h-full w-full">
+            <img src={i.image} alt={i.name} className="h-80 w-80" />
+            <h3>Name:{i.name}</h3>
+            <p>Quantity:{i.quantity}</p>
+            <p>Price:{i.price}</p>
+          </div>
+        ))}
+      </>
+    );
   }
 
   return (
     <div className="flex gap-2 justify-center items-center">
       <div className="grid grid-cols-4 gap-2 ">
         {data &&
-          data.map((d, i) => (
-            <div key={i}>
+          data.map((d) => (
+            <div key={d.id} onClick={() => showOneDataCard(d.id)}>
               <img src={d.image} alt={d.name} className="h-40 w-60" />
               <h3>Name:{d.name}</h3>
               <p>Quantity:{d.quantity}</p>
